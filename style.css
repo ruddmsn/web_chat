@@ -1,19 +1,379 @@
-:root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172033; background: #eef3fb; }
-body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: radial-gradient(circle at 20% 0%, #d9e8ff 0, transparent 35%), #eef3fb; }
-#app { position: relative; width: min(100%, 920px); height: min(900px, 100vh); display: flex; flex-direction: column; overflow: hidden; background: rgba(250,252,255,.88); box-shadow: 0 28px 80px rgba(31,52,84,.18); }
-header { position: relative; z-index: 2; min-height: 78px; display: flex; align-items: center; justify-content: center; padding: 10px 24px; border-bottom: 1px solid rgba(140,157,183,.22); background: rgba(255,255,255,.74); backdrop-filter: blur(22px); }
-header::before { content: ""; position: absolute; top: 10px; width: 42px; height: 4px; border-radius: 99px; background: #c5cfdd; }
-h1 { margin-top: 12px; color: #1c2940; font-size: 18px; font-weight: 750; }
-#messages { width: min(100%, 680px); flex: 1; margin: 0 auto; padding: 28px 22px 112px; overflow-y: auto; }
-#messages:empty::before { content: "Start a conversation"; display: block; margin-top: 30vh; color: #95a2b5; font-size: 14px; font-weight: 600; text-align: center; }
-#messages li { width: fit-content; max-width: min(78%, 520px); margin: 9px 0; padding: 11px 16px; border: 1px solid rgba(190,201,218,.52); border-radius: 21px; background: rgba(255,255,255,.9); color: #243149; box-shadow: 0 4px 13px rgba(44,66,96,.06); font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; animation: message-in .2s ease-out both; }
-#messages li.right, #messages li.mine, #messages li.me { margin-left: auto; border-color: transparent; border-bottom-right-radius: 7px; background: linear-gradient(135deg, #4d91ff, #176ee8); color: white; box-shadow: 0 8px 18px rgba(36,117,236,.22); }
-#messages li.left, #messages li.other, #messages li.them { border-bottom-left-radius: 7px; }
-#chat-form { position: absolute; right: 0; bottom: 0; left: 0; z-index: 3; display: flex; gap: 10px; width: min(100%, 680px); margin: 0 auto; padding: 14px 22px max(14px, env(safe-area-inset-bottom)); background: linear-gradient(180deg, transparent, rgba(248,250,255,.92) 25%); }
-#chat-input { min-width: 0; flex: 1; height: 48px; padding: 0 18px; border: 1px solid #d4ddea; border-radius: 25px; outline: none; background: rgba(255,255,255,.95); color: #172033; box-shadow: 0 6px 20px rgba(46,67,99,.1); font: inherit; }
-#chat-input:focus { border-color: #4d91ff; box-shadow: 0 0 0 4px rgba(77,145,255,.14), 0 8px 24px rgba(46,67,99,.12); }
-#chat-form button { flex: 0 0 auto; width: 48px; height: 48px; border: 0; border-radius: 50%; color: white; background: linear-gradient(145deg, #5a9aff, #216fe7); box-shadow: 0 8px 18px rgba(36,117,236,.3); font-size: 0; cursor: pointer; }
-#chat-form button::before { content: "SEND"; font-size: 10px; font-weight: 800; }
-#chat-form button:active { transform: scale(.91); }
-@keyframes message-in { from { opacity: 0; transform: translateY(7px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@media (max-width: 600px) { body { display: block; } #app { width: 100%; height: 100vh; box-shadow: none; } #messages { padding-right: 15px; padding-left: 15px; } #messages li { max-width: 84%; } #chat-form { padding-right: 15px; padding-left: 15px; } }
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: white;
+  background: #000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+#app {
+  position: relative;
+  width: min(100%, 600px);
+  height: min(900px, 100vh);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #000;
+}
+
+/* =========================
+   상단 헤더
+   ========================= */
+
+header {
+  position: relative;
+  z-index: 10;
+
+  height: 90px;
+  min-height: 90px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding-bottom: 12px;
+
+  background: rgba(20, 20, 20, 0.72);
+
+  /* 반투명 + 뒤쪽 흐림 효과 */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 뒤로가기 */
+header::after {
+  content: "‹";
+
+  position: absolute;
+  left: 15px;
+  top: 24px;
+
+  color: #0a84ff;
+
+  font-family: Arial, sans-serif;
+  font-size: 42px;
+  font-weight: 200;
+
+  line-height: 30px;
+}
+
+/* 제목 */
+h1 {
+  position: relative;
+
+  margin: 0;
+
+  padding-top: 30px;
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+/* 프로필 원 */
+h1::before {
+  content: "w";
+
+  position: absolute;
+
+  left: 50%;
+  top: -13px;
+
+  transform: translateX(-50%);
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #a7a7a9;
+
+  color: white;
+
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* =========================
+   메시지 영역
+   ========================= */
+
+#messages {
+  width: 100%;
+
+  flex: 1;
+
+  margin: 0;
+
+  padding: 20px 14px 100px;
+
+  overflow-y: auto;
+
+  background: #000;
+
+  scrollbar-width: none;
+}
+
+#messages::-webkit-scrollbar {
+  display: none;
+}
+
+/* 메시지가 없을 때 */
+#messages:empty::before {
+  content: "Start a conversation";
+
+  display: block;
+
+  margin-top: 30vh;
+
+  color: #777;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-align: center;
+}
+
+/* =========================
+   메시지
+   ========================= */
+
+#messages li {
+  position: relative;
+
+  width: fit-content;
+  max-width: 76%;
+
+  margin: 7px 0;
+
+  padding: 10px 14px;
+
+  border: none;
+
+  border-radius: 19px;
+
+  background: #29292e;
+
+  color: #fff;
+
+  font-size: 15px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+
+  box-shadow: none;
+
+  animation: message-in 0.2s ease-out both;
+}
+
+/* 상대방 메시지 */
+#messages li.left,
+#messages li.other,
+#messages li.them {
+  margin-right: auto;
+
+  background: #29292e;
+
+  border-bottom-left-radius: 5px;
+}
+
+/* 내가 보낸 메시지 */
+#messages li.right,
+#messages li.mine,
+#messages li.me {
+  margin-left: auto;
+
+  background: #24d65b;
+
+  color: white;
+
+  border-bottom-right-radius: 5px;
+}
+
+/* =========================
+   입력 영역
+   ========================= */
+
+#chat-form {
+  position: absolute;
+
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  width: 100%;
+
+  padding: 9px 10px max(9px, env(safe-area-inset-bottom));
+
+  background: rgba(0, 0, 0, 0.88);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 입력창 */
+#chat-input {
+  min-width: 0;
+
+  flex: 1;
+
+  height: 40px;
+
+  padding: 0 15px;
+
+  border: 1px solid #3a3a3f;
+
+  border-radius: 21px;
+
+  outline: none;
+
+  background: #1c1c1e;
+
+  color: white;
+
+  font-family: inherit;
+  font-size: 15px;
+
+  box-shadow: none;
+}
+
+/* 입력창 placeholder */
+#chat-input::placeholder {
+  color: #777;
+}
+
+/* 입력창 클릭 */
+#chat-input:focus {
+  border-color: #555;
+
+  outline: none;
+
+  box-shadow: none;
+}
+
+/* =========================
+   보내기 버튼
+   ========================= */
+
+#chat-form button {
+  position: relative;
+
+  flex: 0 0 auto;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #24d65b;
+
+  color: white;
+
+  font-size: 0;
+
+  cursor: pointer;
+}
+
+/* 보내기 화살표 */
+#chat-form button::before {
+  content: "↑";
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -53%);
+
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* 버튼 클릭 */
+#chat-form button:active {
+  transform: scale(0.9);
+}
+
+/* =========================
+   메시지 등장 효과
+   ========================= */
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   모바일
+   ========================= */
+
+@media (max-width: 600px) {
+  body {
+    display: block;
+  }
+
+  #app {
+    width: 100%;
+    height: 100vh;
+
+    box-shadow: none;
+  }
+
+  header {
+    height: 90px;
+    min-height: 90px;
+  }
+
+  #messages {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  #messages li {
+    max-width: 82%;
+  }
+
+  #chat-form {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}

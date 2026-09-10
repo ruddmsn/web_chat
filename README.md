@@ -12,16 +12,17 @@
    - server.js
      - server = http.createServer()
      - server.listen()
-     
-- index.html
-  - #app
-    - header
-    - ul#messages
-    - form#chat-form
-      - input#chat-input
-      - button
-- reset.css
-  - *
-  - ul
-- style.css
-- client.js
+   - index.html
+     - #app
+       - header
+       - ul#messages
+       - form#chat-form
+         - input#chat-input
+         - button
+   - reset.css
+     - \*
+     - ul
+   - style.css
+   - client.js
+     - addEventListener("submit", (event) => {})
+     - addMessage()
