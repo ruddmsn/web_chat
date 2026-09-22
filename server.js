@@ -60,3 +60,18 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, HOST, () =>
   console.log(`Static server running at http://${HOST}:${PORT}`),
 );
+
+// ----------- Welcome WebSocketSever World -----------
+const { WebSocketServer } = require("ws");
+
+// http 서버 : 정적 파일(html, css, js...) 서비스
+// WebSocket 서버 : 실시간 서비스
+const wss = new WebSocketServer({ server });
+
+wss.on("connection", (ws) => {
+  console.log("클라이언트 연결");
+
+  ws.on("close", () => {
+    console.log("클라이언트 연결 해제");
+  });
+});

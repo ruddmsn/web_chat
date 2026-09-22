@@ -20,3 +20,13 @@ chatForm.addEventListener("submit", (event) => {
   chatInput.value = "";
   chatInput.focus();
 });
+// ----------- Welcome WebSocketSever World -----------
+const ws = new WebSocket(`ws://${location.host}`);
+
+// ws.on("open", () => {});
+ws.onopen = () => {
+  console.log("서버 연결");
+};
+ws.onclose = () => {
+  console.log("서버 연결 해제");
+};

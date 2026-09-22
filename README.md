@@ -26,3 +26,13 @@
    - client.js
      - addEventListener("submit", (event) => {})
      - addMessage()
+3. WebSocket
+  1. `npm install ws`
+    - server.js
+      - WebSocketServer
+        - wss.on("connection", (ws) => {});
+          - ws.on("close", () => {});
+    - client.js
+      - WebSocket
+        - ws.onopen = () => {};
+        - ws.onclose = () => {};
