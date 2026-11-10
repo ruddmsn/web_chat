@@ -27,27 +27,43 @@
      - addEventListener("submit", (event) => {})
      - addMessage()
 3. WebSocket
-   - `npm install ws`
-     - WebSocketServer, WebSocket
-     - server.js
-       - wss.on("connection", (ws) => {});
-         - ws.on("message", (data) => {}); // string -> json
-         - ws.on("close", () => {});
-     - client.js
-       - chatForm.addEventListener("submit", ...)
-         - ws.send({ type: "message", text }); // json -> string
-       - ws.onopen = () => {};
-       - ws.onclose = () => {};
-   2. Broadcast
+   1. `npm install ws`
+      - WebSocketServer, WebSocket
+      - server.js
+        - wss.on("connection", (ws) => {});
+          - ws.on("message", (data) => {}); //string -> json
+          - ws.on("close", () => {});
+      - client.js
+        - chatForm.addEventListener("submit", ...)
+          - ws.send({ type: "message", text }); //json -> string
+        - ws.onopen = () => {};
+        - ws.onclose = () => {};
+  2. Broadcast
+   - client A -> Server -> 모든 client
+   - client B -> Server -> 모든 client
+   - server.js
+     - 연결된 client 들 목록
+       - wss.on("connection", ) 할 때, client 추가
+       - ws.on("close", ) 할 때, client 삭제
+     - message 수신 -> broadcastMessage 객체 -> broadcast()
+       - broadcastMessage 객체 = {type, text, id, timestamp}
+       - broadcast() = client 목록에서 WebSocket.OPEN인 client에게 send()
+   - client.js
+     - message 송신 -> Server: send() when submit
+     - message 수신(onmessage()) -> addMessage()
+  3. nickname
    - client A -> Server -> 모든 client
    - client B -> Server -> 모든 client
    - server.js
      - 연결된 client들 목록
        - wss.on("connection", ) 할 때, client 추가
-       - ws.on("close", ) 할 때, client 삭제
+       - ws.on("message", ) 그리고 type "join"이면 users {ws: {nicknmae}}
+       - ws.on("close", ) 할 때, client 삭제, users에서 ws 삭제
      - message 수신 -> broadcastMessage 객체 -> broadcast()
-       - broadcastMessage = {type, text, id, timestamp}
+       - broadcastMessage = {type, text, id, timestamp, nickname}
        - broadcast() = client 목록에서 WebSocket.OPEN인 client에게 send()
    - client.js
-    - message 송신 -> Server: send() when submit
-    - message 수신(onmessage()) -> addMessage()
+     - nickname 설정하기
+     - message 송신 -> Server: send({"join": nickname})
+     - message 송신 -> Server: send() when submit
+     - message 수신(onmessage()) -> addMessage(nickname, text)
