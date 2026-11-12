@@ -64,7 +64,7 @@ server.listen(PORT, HOST, () =>
 // ----------- Welcome WebSocketSever World -----------
 const { WebSocketServer } = require("ws");
 const clients = new Set(); // 집합: 중복x
-const users = new Map(); // ws-{nickname}
+const users = new Map(); //ws-{nickname}
 let nextMessageId = 0; // broadcastMessage id : 1씩 증가, 고유의 값
 
 function broadcast(broadcastMessage) {
@@ -99,12 +99,12 @@ wss.on("connection", (ws) => {
     switch (json.type) {
       case "join":
         console.log("nickname 수신: ", json.text);
-        users.set(ws, { nickname: json.text }); // ws-{nickname}
+        users.set(ws, { nickname: json.text });
         break;
       case "chat":
         console.log("chat 수신: ", json.text);
-        // nickname 알아내기: ws -> ws-{nickname}에서 찾아서 -> nickname속성에 넣기
-        const user = users.get(ws); // {nickname: ""}
+        //nickname 알아내기: ws -> ws-{nickname}에서 찾아서 -> nickname 속성에 넣기
+        const user = users.get(ws);
         const broadcastMessage = {
           type: json.type,
           text: json.text,
@@ -121,6 +121,5 @@ wss.on("connection", (ws) => {
     console.log("클라이언트 연결 해제");
     // client 목록에서 client 삭제하자
     clients.delete(ws);
-    users.delete(ws);
   });
 });

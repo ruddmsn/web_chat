@@ -3,9 +3,12 @@ const chatForm = document.querySelector("#chat-form");
 const chatInput = document.querySelector("#chat-input");
 
 function addMessage(senderNickname, message) {
-  const listItem = document.createElement("li");
-  listItem.textContent = senderNickname + " : " + message;
-  messageList.appendChild(listItem);
+  const li = document.createElement("li"); //<li></li>
+  li.textContent = senderNickname + ":" + message; //<li>닉네임: 메시지</li>
+  messageList.appendChild(li);// <ul id="messages"><li>닉네임: 메시지</li></ul>
+  //append와 appendChild의 차이 : 요소 안에 넣을거냐 뒤에 붙일거냐의 차이
+
+  
 }
 
 chatForm.addEventListener("submit", (event) => {
@@ -24,12 +27,11 @@ chatForm.addEventListener("submit", (event) => {
 });
 // ----------- Welcome WebSocketSever World -----------
 const ws = new WebSocket(`ws://${location.host}`);
-const nickname = prompt("당신의 닉네임을 입력하세요").trim() || "익명";
-
+const nickname = prompt("당신의 닉네임을 입력하세요.").trim() || "익명";
 // ws.on("open", () => {});
 ws.onopen = () => {
   console.log("서버 연결");
-  ws.send(JSON.stringify({ type: "join", text: nickname })); // server에 nickname 보내기
+  ws.send(JSON.stringify({ type: "join", text: nickname })); //server에 nickname 보내기
 };
 ws.onmessage = (event) => {
   // string -> json
