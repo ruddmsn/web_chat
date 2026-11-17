@@ -5,17 +5,27 @@ const chatInput = document.querySelector("#chat-input");
 function addMessage(senderNickname, message) {
   const li = document.createElement("li");
 
-  // 내가 보낸 메시지라면 my-message 클래스 추가
   if (senderNickname === nickname) {
     li.classList.add("my-message");
+  } else {
+    document.querySelector("header h1").textContent = senderNickname;
   }
 
   const nicknameSpan = document.createElement("span");
   nicknameSpan.classList.add("nickname");
   nicknameSpan.textContent = senderNickname;
 
+  const timeSpan = document.createElement("span");
+  timeSpan.classList.add("message-time");
+  timeSpan.textContent = new Date().toLocaleTimeString("ko-KR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
   li.appendChild(nicknameSpan);
   li.append(message);
+  li.appendChild(timeSpan);
   messageList.appendChild(li);
 }
 

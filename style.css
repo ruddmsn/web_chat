@@ -146,19 +146,7 @@ h1 {
 
 /* 받은 메시지 유리광 */
 #messages li::before {
-  position: absolute;
-  top: 2px;
-  right: 10px;
-  left: 10px;
-  height: 42%;
-  border-radius: 15px 15px 9px 9px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0.15)
-  );
-  content: "";
-  pointer-events: none;
+  display: none;
 }
 
 #messages .nickname {
@@ -208,13 +196,7 @@ h1 {
 
 /* 보낸 메시지 유리광 */
 #messages li.my-message::before {
-  right: 10px;
-  left: 10px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.63),
-    rgba(255, 255, 255, 0.06)
-  );
+  display: none;
 }
 
 /* 보낸 메시지 오른쪽 꼬리 */
@@ -326,4 +308,30 @@ h1 {
   #app {
     min-height: 100vh;
   }
+}
+
+/* 상대 메시지 시간: 말풍선 오른쪽 */
+#messages .message-time {
+  position: absolute;
+  right: -7px;
+  bottom: 0;
+  transform: translateX(100%);
+  color: #aaa;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+/* 내 메시지 시간: 말풍선 왼쪽 */
+#messages .my-message .message-time {
+  right: auto;
+  left: -7px;
+  transform: translateX(-100%);
+}
+/* 내가 보낸 메시지의 닉네임 숨기기 */
+#messages li.my-message .nickname {
+  display: none;
 }
