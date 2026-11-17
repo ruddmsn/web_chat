@@ -3,12 +3,20 @@ const chatForm = document.querySelector("#chat-form");
 const chatInput = document.querySelector("#chat-input");
 
 function addMessage(senderNickname, message) {
-  const li = document.createElement("li"); //<li></li>
-  li.textContent = senderNickname + ":" + message; //<li>닉네임: 메시지</li>
-  messageList.appendChild(li);// <ul id="messages"><li>닉네임: 메시지</li></ul>
-  //append와 appendChild의 차이 : 요소 안에 넣을거냐 뒤에 붙일거냐의 차이
+  const li = document.createElement("li");
 
-  
+  // 내가 보낸 메시지라면 my-message 클래스 추가
+  if (senderNickname === nickname) {
+    li.classList.add("my-message");
+  }
+
+  const nicknameSpan = document.createElement("span");
+  nicknameSpan.classList.add("nickname");
+  nicknameSpan.textContent = senderNickname;
+
+  li.appendChild(nicknameSpan);
+  li.append(message);
+  messageList.appendChild(li);
 }
 
 chatForm.addEventListener("submit", (event) => {
